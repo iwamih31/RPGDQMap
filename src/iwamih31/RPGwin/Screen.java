@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import javax.sound.sampled.LineUnavailableException;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -80,6 +81,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 	private JButton cancelButton;
 	private int menuNum;
 	private String imageURL;
+	private Music music;
 	private static int x;
 	private static int y;
 	private static int[][] originalMap;
@@ -902,12 +904,14 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 			case 11 ://良い人
 
+				musicReset();
 				eventLoop_Heal();
 
 				break;
 
 			case 12 ://情報
 
+				musicReset();
 				eventLoop();
 
 				break;
@@ -920,12 +924,18 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 			case 14 ://戦闘
 
+					music.stop();
+					music = new Music("media/戦闘のテーマ.mp3");
+					music.playRepeat();
+
 				setMode(5);
 				adventure();
 
 				break;
 
 			case 15 ://宝箱
+
+				musicReset();
 
 				eventLoop();
 
@@ -1052,6 +1062,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 			} else {
 
+				musicReset();
 				toNormal();
 
 			}
@@ -1694,6 +1705,9 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 		switch (mode) {
 
 			case 3 ://店
+
+				musicReset();
+
 				count = 0;
 				Main.action(3);
 				setMessage("「いらっしゃいませ、御用は何でしょうか？」");
@@ -1914,6 +1928,9 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 		switch (mode) {
 
 			case 4 ://宿屋
+
+				musicReset();
+
 				count = 0;
 				menu = new Object[]{ "はい", "いいえ", "状態確認", "復活の儀式" };
 
@@ -2313,6 +2330,8 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 			case 5555 ://戦闘後
 
+				musicReset();
+
 				count = 0;
 				setMode(55551);
 				Battle.exp();
@@ -2363,11 +2382,23 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 		}
 	}
 
+	private void musicReset() {
+		if (music != null) {
+			music.stop();
+			music = null;
+		}
+	}
+
 	private void toNormal() {
 		setMode(1);/////////////////////////////////////通常モードへ
 		Main.save();
 		setMessage("どうしますか?");
 		field();
+
+		if (music == null) {
+			music = new Music("media/冒険の歌.mp3");
+			music.playRepeat();
+		}
 	}
 
 	private void battle() {
@@ -3332,6 +3363,8 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 	public void keyPressed(KeyEvent keyEvent) {
 
+//		Toolkit.getDefaultToolkit().beep(); // ビープ音を鳴らす
+
 		int pressedKey = keyEvent.getKeyCode();
 
 		String keyName = KeyEvent.getKeyText(pressedKey);
@@ -3394,6 +3427,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 				default:
 					System.out.println(keyName + "KEYが押されました(mode = 1)");
 //					メニューを表示する
+					pushSound(); // キープッシュ音を鳴らす
 					buttonName = Command.menu()[1];
 					fieldAction(buttonName);
 					break;
@@ -3414,6 +3448,8 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 					System.out.println("");//////////////////////////////////////////
 					System.out.println(ent + "ボタンをクリックします");////////////
 					System.out.println("");//////////////////////////////////////////
+
+					pushSound(); // キープッシュ音を鳴らす
 
 //					buttonName = null;
 
@@ -3437,6 +3473,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 				case KeyEvent.VK_8:
 				case KeyEvent.VK_5:
 					System.out.println("上が押されました");
+					pushSound(); // キープッシュ音を鳴らす
 					menuNum --;
 					selectStyle();
 					break;
@@ -3446,12 +3483,14 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 				case KeyEvent.VK_2:
 				case KeyEvent.VK_0:
 					System.out.println("下が押されました");
+					pushSound(); // キープッシュ音を鳴らす
 					menuNum ++;
 					selectStyle();
 					break;
 
 				default:
 					System.out.println(pressedKey + "が押されました");
+					pushSound(); // キープッシュ音を鳴らす
 					break;
 			}
 		}
@@ -3470,7 +3509,17 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 	}
 
 
+	private void pushSound() {
+		try {
+			new Sound();
+		} catch (LineUnavailableException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
+	}
+
 	private void selectStyle() {
+
 		if (menuNum < 0) menuNum += menuButton.length;
 		if (menuButton.length <= menuNum) menuNum -= menuButton.length;
 		for (JButton jButton : menuButton) {

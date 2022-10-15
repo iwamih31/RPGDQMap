@@ -1033,7 +1033,7 @@ public class Main extends AbstractTableModel implements Serializable{
 		System.out.println( "      " );
 		System.out.print( "「開けると" );
 		int what = new java.util.Random ( ).nextInt( 100 ) + 1;
-		if( what < 50 ){
+		if( what < 45 ){
 			Item.plus( 1 );
 			get = (String) Item.getItemList()[ 1 ][ 1 ];
 		}else if( what < 70 ){
