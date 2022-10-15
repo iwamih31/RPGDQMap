@@ -79,6 +79,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 	private JButton[] menuButton;
 	private JButton cancelButton;
 	private int menuNum;
+	private String imageURL;
 	private static int x;
 	private static int y;
 	private static int[][] originalMap;
@@ -173,6 +174,8 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 		panelS = panelSetUD(null, textAreaS);
 
 		space = labelSet("                                       ");
+
+		imageURL =  "image/";
 
 		eventImage = "エアー.png";
 
@@ -873,14 +876,6 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 	public void actionPerformedSwitch1() {
 
-//		// フォーカスをframeに持ってくる
-//		frame.setFocusable(true);
-//		System.out.println("");/////////////////////////////////////
-//		System.out.println("frameにフォーカスをあてました");////////
-//		System.out.println("");/////////////////////////////////////
-//		//キー入力の有効化
-//		frame.addKeyListener(this);
-
 		switch (mode) {
 
 			case 1 ://探す
@@ -892,6 +887,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 			case 10 ://
 				if (ent.equals(buttonName)) {
+					buttonName = null;
 					Main.event();
 					String[] text = Main.getDoText();
 					if(text.length <= count) {
@@ -931,7 +927,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 			case 15 ://宝箱
 
-				getItemLoop();
+				eventLoop();
 
 				break;
 
@@ -1037,7 +1033,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 		if (buttonName.equals(ent)) {
 
 			System.out.println("");/////////////////////////////
-			System.out.println("eventMenu0 count = " + count);///
+			System.out.println("eventLoop count = " + count);///
 			System.out.println("");/////////////////////////////
 
 			String[] text = Main.getDoText();
@@ -2722,7 +2718,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 		format(stPanel);
 		stPanel.setBorder(border());
 
-		setBackPanel("バトル.png");
+		setBackPanel(imageURL + "バトル.png");
 
 		ImageIcon icon0 = new ImageIcon(drawMonster(0));
 		JLabel label0 = new JLabel(icon0);
@@ -2933,7 +2929,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 				break;
 		}
 
-		return drawMonster + ".png";
+		return imageURL + drawMonster + ".png";
 	}
 
 	private String drawItem() {
@@ -2990,7 +2986,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 				break;
 		}
 
-		return drawItem + ".png";
+		return imageURL + drawItem + ".png";
 	}
 
 	private MapPiece mapPiece(int number) {
@@ -3173,16 +3169,18 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 		switch(mode) {
 			case 1:
 			case 10:
-				setBackPanel("フィールド.png");
+				setBackPanel(imageURL + "フィールド.png");
 				eventPanel = map2D();
 				break;
+			case 5:
+				setBackPanel(imageURL + "バトル.png");
+				setEventImage(eventImage());
+				break;
 			default:
-				setBackPanel("フィールド.png");
+				setBackPanel(imageURL + "フィールド.png");
 				setEventImage(eventImage());
 				break;
 		}
-
-
 
 		JPanel fieldPanel = new JPanel();
 		format(fieldPanel);
@@ -3257,7 +3255,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 				fileName = "エアー";
 				break;
 		}
-		return fileName + ".png";
+		return imageURL + fileName + ".png";
 	}
 
 	private void imageCodeOmit(int i) {

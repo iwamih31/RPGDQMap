@@ -1020,11 +1020,12 @@ public class Main extends AbstractTableModel implements Serializable{
 
 
 	static void getItem() {
-
-		doText = (new String[3]);
-		doText[0] = ("「!!? 宝箱を見つけた  ☆☆☆」" );
-		doText[1] = ("「開けると○○が入っていた");
-		doText[2] = ("          ⇒"+get + " をリュックに詰め込んだ。");
+		Screen.setCount(0);
+		doText = (new String[4]);
+		doText[0] = ("「 ・・・!!? 」");
+		doText[1] = ("「!!? 宝箱を見つけた  ☆☆☆」");
+		doText[2] = ("「開けると○○が入っていた");
+		doText[3] = ("          ⇒"+get + " をリュックに詰め込んだ。");
 
 		System.out.print( "      " );
 		System.out.println( "「!!? 宝箱を見つけた  ☆☆☆」" );
@@ -1048,21 +1049,23 @@ public class Main extends AbstractTableModel implements Serializable{
 		if( what < 90 ){
 			System.out.println( "が入っていた」" );
 
-			doText[1] = ("「開けると[ " + get + " ]が入っていた");
+			doText[2] = ("「開けると[ " + get + " ]が入っていた");
 
 //			Input.ent( );
 			System.out.println( "" );
 			System.out.println("          ⇒"+get + " をリュックに詰め込んだ。" );
 
-			doText[2] = ("          ⇒"+get + " をリュックに詰め込んだ。" );
+			doText[3] = ("          ⇒"+get + " をリュックに詰め込んだ。" );
 
 //			Input.ent( );
 		}else{
 			Screen.setCount(0);
-			doText = (new String[3]);
-			doText[0] = ("「開けると[ party[ who ].wep() ]が入っていた");
-			doText[1] = ("party[ who ].getName() + は + party[ who ].wep() + を装備した" );
-			doText[2] = ("[ sell + ]はメルカリに出し[ + price  + G ]で売れた");
+			doText = (new String[5]);
+			doText[0] = ("「 ・・・!!? 」");
+			doText[1] = ("「!!? 宝箱を見つけた  ☆☆☆」");
+			doText[2] = ("「開けると[ party[ who ].wep() ]が入っていた");
+			doText[3] = ("party[ who ].getName() + は + party[ who ].wep() + を装備した" );
+			doText[4] = ("[ sell + ]はメルカリに出し[ + price  + G ]で売れた");
 
 			int who = new java.util.Random ( ).nextInt( 4 );
 			String sell = party[ who ].getWeapon()[ party[ who ].getWp( ) ];
@@ -1078,17 +1081,17 @@ public class Main extends AbstractTableModel implements Serializable{
 			System.out.println( "" );
 //			Input.ent();
 
-			doText[0] = ("「開けると[ " + party[who].wep() + " ]が入っていた");
+			doText[2] = ("「開けると[ " + party[who].wep() + " ]が入っていた");
 
 			System.out.print( party[ who ].getName() + "は" );
 			party[ who ].wep();
 			System.out.println( "を装備した" );
 
-			doText[1] = ("[ " + party[ who ].getName() + " ]は[" + party[ who ].wep() + " ]を装備した" );
+			doText[3] = ("[ " + party[ who ].getName() + " ]は[" + party[ who ].wep() + " ]を装備した" );
 
 			System.out.println( sell + "はメルカリに出し"+ price +"Gで売れた");
 
-			doText[2] = ("[ " + sell + " ]はメルカリに出し[ "+ price +"G ]で売れた");
+			doText[4] = ("[ " + sell + " ]はメルカリに出し[ "+ price +"G ]で売れた");
 
 //			Input.ent( );
 		}
