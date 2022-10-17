@@ -82,6 +82,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 	private int menuNum;
 	private String imageURL;
 	private Music music;
+	private int mapNumber;
 	private static int x;
 	private static int y;
 	private static int[][] originalMap;
@@ -533,6 +534,9 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 	private void load() {
 		Main.load();
+		setMapNumber(0);
+		x = 6;
+		y = 6;
 	}
 
 	public void menu(Object[] mList) {
@@ -576,6 +580,8 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 		panelE = panelSetWCE(null, bPanel, null);
 
 		menuNum = 0;
+
+		if(mode == 1) menuNum = 1;
 
 		selectStyle();
 
@@ -650,14 +656,20 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 		switch (mode) {
 
 			case 0 ://最初
+
+				if (music == null) {
+					music = new Music("media/オープニング.mp3");
+					music.playRepeat();
+				}
+
 				if (buttonName.equals(ynList[0])) {
+					musicReset();
 					begin();
 					opening();
 				}
 				if (buttonName.equals(ynList[1])) {
+					musicReset();
 					load();
-					x = 0;
-					y = 0;
 					toNormal();
 				}else{
 					opening();
@@ -684,6 +696,22 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 			case 5 ://戦闘
 
+				break;
+
+			case 6 ://お城
+				if (music == null) {
+					music = new Music("media/オープニング.mp3");
+					music.playRepeat();
+				}
+				field(6);
+				break;
+
+			case 7 ://ダンジョン
+				if (music == null) {
+					music = new Music("media/オープニング.mp3");
+					music.playRepeat();
+				}
+				field(7);
 				break;
 
 			case 9 ://死亡
@@ -820,6 +848,25 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 	}
 
+	private void field(int modeNum) {
+
+		System.out.println("");////////////////////////////////////////
+		System.out.println("field(" + modeNum + ") します");///////////
+		System.out.println("");////////////////////////////////////////
+
+		setMode(modeNum);
+
+		buttonName = null;
+
+		partySt();
+		info(goldList(),itemList(),"");
+		scene();
+		menu(Command.menu());
+		comment();
+
+		change();
+	}
+
 	private void use() {
 		// TODO 自動生成されたメソッド・スタブ
 
@@ -842,7 +889,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 	private void whichUse(String selectButtonName) {
 
 		System.out.println("");//////////////////////////////////////////
-		System.out.println("fieldUse(" + selectButtonName +") します");////////
+		System.out.println("whichUse(" + selectButtonName +") します");////////
 		System.out.println("");//////////////////////////////////////////
 
 		if (selectButtonName.equals(menu[0])) {
@@ -874,6 +921,13 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 			setMode(22);
 		}
+
+		if (selectButtonName.equals(cancel)) {
+
+			buttonName = null;
+
+			toNormal();
+		}
 	}
 
 	public void actionPerformedSwitch1() {
@@ -896,9 +950,9 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 						toNormal();
 					}else {
 						setMessageEnt(text[count]);
+						adventure();
+						count = (count + 1);
 					}
-					adventure();
-					count = (count + 1);
 				}
 				break;
 
@@ -1064,7 +1118,6 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 				musicReset();
 				toNormal();
-
 			}
 		}
 	}
@@ -2390,13 +2443,36 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 	}
 
 	private void toNormal() {
-		setMode(1);/////////////////////////////////////通常モードへ
-		Main.save();
 		setMessage("どうしますか?");
-		field();
+		switch (mapNumber) {
+			case 0:
+				field(1);/////////////////////////////////////通常モードへ
 
+				repeatMusic("冒険の歌");
+
+				break;
+
+			case 1:
+				field(6);/////////////////////////////////////城内モードへ
+
+				repeatMusic("オープニング");
+
+				break;
+
+			case 2:
+				field(７);/////////////////////////////////////城内モードへ
+
+				repeatMusic("オープニング");
+
+				break;
+		}
+		Main.save();
+		count = 0;
+	}
+
+	private void repeatMusic(String musicName) {
 		if (music == null) {
-			music = new Music("media/冒険の歌.mp3");
+			music = new Music("media/" + musicName + ".mp3");
 			music.playRepeat();
 		}
 	}
@@ -2461,6 +2537,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 		} else {
 			if(Battle.getfMode() == 0){
+				musicReset();
 				toNormal();
 			}else{
 				count = 0;
@@ -2803,43 +2880,140 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 	}
 
 	private int[][] getOriginalMap() {
-		int[][] originalMap = {
-				{4,2,2,3,1,0,1,2,3,1,2,3,1,0,3},
-				{1,1,2,3,1,0,1,2,3,1,3,1,0,1,2},
-				{2,0,0,0,1,0,1,2,3,1,2,3,1,0,1},
-				{2,3,1,0,1,0,1,2,3,1,1,2,3,1,2},
-				{2,3,1,0,1,0,1,2,3,1,2,3,1,0,1},
-				{2,3,1,0,1,0,1,2,3,1,1,2,3,1,2},
-				{2,3,1,0,1,0,1,1,3,1,3,1,0,1,0},
-				{2,3,1,0,1,0,0,0,0,0,0,3,3,3,1},
-				{1,2,3,1,0,0,1,2,3,1,1,2,3,1,2},
-				{1,2,3,1,0,0,1,2,3,1,1,2,3,1,2},
-				{1,2,3,1,0,0,1,2,3,1,2,3,1,0,1},
-				{1,2,3,1,0,0,1,2,3,1,0,1,3,1,2},
-				{0,1,2,2,3,1,0,0,1,2,3,1,1,1,0},
-				{0,1,2,2,3,1,0,0,1,2,2,3,1,9,1},
-				{3,0,3,1,2,1,0,0,1,2,3,1,0,1,3}
+
+		int[][] originalMap = null;
+
+		int[][] field1_Map = {
+				{4,2,3,3,3,3,1,1,1,2,2,1,1,3,3},
+				{1,1,2,3,3,3,1,2,2,1,2,1,3,3,2},
+				{2,0,0,3,3,2,1,1,2,1,2,2,3,3,3},
+				{3,3,0,0,0,1,2,1,2,1,1,1,2,3,3},
+				{3,3,3,3,2,1,1,1,2,1,2,1,1,2,3},
+				{3,3,1,0,1,0,2,2,2,0,0,2,1,1,1},
+				{1,3,1,2,2,2,1,1,0,0,3,0,0,2,1},
+				{3,3,1,2,0,2,1,2,2,0,0,2,2,1,1},
+				{3,2,1,2,1,2,1,1,1,2,0,2,1,1,3},
+				{1,2,1,1,1,2,2,2,1,2,1,2,2,2,1},
+				{2,2,2,2,2,2,1,1,1,2,1,1,1,1,1},
+				{1,2,0,0,0,0,1,2,2,2,1,1,0,0,1},
+				{1,1,2,3,3,2,1,1,1,1,2,1,3,3,3},
+				{3,1,1,1,3,3,3,3,2,1,2,1,3,9,3},
+				{3,3,3,1,2,3,1,3,1,1,2,1,1,1,3}
 		};
 
-//		int[][] originalMap = {
-//				{4,3,3,3,3,3,3,3,3,3,3,3,3,3,3},
-//				{3,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-//				{3,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-//				{3,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-//				{3,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-//				{3,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-//				{3,1,1,1,1,1,1,9,1,1,1,1,1,1,1},
-//				{3,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-//				{3,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-//				{3,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-//				{3,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-//				{3,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-//				{3,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-//				{3,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-//				{3,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
-//		};
+		int[][] castle1_Map = {
+				{3,3,3,3,3,3,3,3,3,3,3,3,3,3,1},
+				{3,3,3,1,1,1,1,1,1,1,1,1,1,1,1},
+				{3,3,2,1,2,2,2,2,2,2,2,2,2,2,1},
+				{3,1,2,0,0,2,0,9,2,0,2,0,0,2,1},
+				{3,1,2,2,0,2,0,2,0,0,0,0,0,2,1},
+				{3,1,2,0,0,2,0,0,0,0,2,0,2,2,1},
+				{3,1,2,0,2,2,2,2,2,2,0,0,0,2,1},
+				{3,1,2,0,0,2,0,0,0,0,2,0,0,2,1},
+				{3,1,2,0,0,0,0,2,0,0,0,0,0,2,1},
+				{3,1,2,2,2,2,2,2,2,2,2,2,0,2,1},
+				{3,0,0,0,0,0,4,0,0,0,0,0,0,2,1},
+				{3,2,2,2,2,2,2,0,2,2,2,2,2,2,1},
+				{3,9,1,1,1,1,2,0,2,1,1,1,1,1,1},
+				{3,3,3,1,3,1,8,8,8,1,3,3,3,3,3},
+				{3,4,1,1,3,1,1,1,1,1,3,1,1,1,1}
+		};
+
+		int[][] dungeon1_Map = {
+				{0,9,0,0,0,0,2,0,2,0,2,2,2,2,2},
+				{0,0,0,2,2,0,2,0,2,0,0,0,0,0,2},
+				{2,2,2,0,0,0,2,0,2,2,2,2,2,0,2},
+				{0,0,0,0,2,2,2,0,0,0,2,0,2,0,2},
+				{0,2,0,2,0,0,0,2,2,0,2,0,2,0,2},
+				{0,2,0,2,0,2,0,0,0,0,2,0,0,0,2},
+				{0,0,2,2,0,0,2,2,2,2,2,2,2,2,2},
+				{2,0,2,2,2,0,2,0,0,0,0,0,0,0,0},
+				{2,0,0,0,0,0,2,0,2,2,2,2,2,2,0},
+				{2,0,2,2,2,2,2,0,2,0,0,0,0,2,0},
+				{2,0,2,0,0,0,2,0,0,0,0,2,0,2,0},
+				{2,0,2,0,2,0,2,2,2,2,2,0,0,2,0},
+				{2,0,2,2,2,0,2,0,0,0,0,0,0,2,0},
+				{2,0,0,0,0,0,2,0,2,2,2,2,2,0,0},
+				{2,2,2,2,2,2,2,0,2,0,0,0,0,0,4}
+		};
+
+		switch (mapNumber) {
+			case 0:
+				originalMap = field1_Map;
+				break;
+
+			case 1:
+				originalMap = castle1_Map;
+				break;
+
+			case 2:
+				originalMap = dungeon1_Map;
+				break;
+
+
+			default:
+				originalMap = field1_Map;
+				break;
+		}
 
 		return originalMap;
+	}
+
+	private MapPiece mapPiece(int number) {
+
+		MapPiece mapPiece = null;
+
+		switch (number) {
+			case 0 :
+				String mapImage = "砂";
+
+				if(mapNumber == 2) mapImage = "闇";
+
+				mapPiece = new MapPiece(mapImage, 1);
+				break;
+
+			case 1 :
+				mapPiece = new MapPiece("草", 2);
+				break;
+
+			case 2 :
+				mapPiece = new MapPiece("山", 0);
+				break;
+
+			case 3 :
+				mapPiece = new MapPiece("海", 0);
+				break;
+
+			case 4 :
+				mapPiece = new MapPiece("洞窟", 4);
+				break;
+
+			case 5 :
+				mapPiece = new MapPiece("階段", 4);
+				break;
+
+			case 6 :
+				mapPiece = new MapPiece("山", 2);
+				break;
+
+			case 7 :
+				mapPiece = new MapPiece("宝箱", 7);
+				break;
+
+			case 8 :
+				mapPiece = new MapPiece("草", 9);
+				break;
+
+			case 9 :
+				mapPiece = new MapPiece("城", 9);
+				break;
+
+			default :
+				mapPiece = new MapPiece("砂", 0);
+				break;
+		}
+
+		return mapPiece;
 	}
 
 	private JPanel map2D() {
@@ -3020,44 +3194,6 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 		return imageURL + drawItem + ".png";
 	}
 
-	private MapPiece mapPiece(int number) {
-
-		MapPiece mapPiece = null;
-
-		switch (number) {
-			case 0 :
-				mapPiece = new MapPiece("砂", 1);
-				break;
-
-			case 1 :
-				mapPiece = new MapPiece("草", 2);
-				break;
-
-			case 2 :
-				mapPiece = new MapPiece("山", 0);
-				break;
-
-			case 3 :
-				mapPiece = new MapPiece("海", 0);
-				break;
-
-			case 4 :
-				mapPiece = new MapPiece("洞窟", 4);
-				break;
-
-			case 9 :
-				mapPiece = new MapPiece("城", 9);
-				break;
-
-			default :
-				mapPiece = new MapPiece("砂", 1);
-				break;
-		}
-
-//		return "/RPGDQ/image_map/" + drawMap + ".png";
-		return mapPiece;
-	}
-
 	void prologue() {
 
 		System.out.println("");//////////////////////////////////////////
@@ -3078,7 +3214,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 	private void castle() {
 
 		System.out.println("");//////////////////////////////////////////
-		System.out.println("field() します");////////////////////////////
+		System.out.println("castle() します");////////////////////////////
 		System.out.println("");//////////////////////////////////////////
 
 		setMode(0);/////////////////////////////////// ?
@@ -3199,6 +3335,8 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 		switch(mode) {
 			case 1:
+			case 6:
+			case 7:
 			case 10:
 				setBackPanel(imageURL + "フィールド.png");
 				eventPanel = map2D();
@@ -3363,13 +3501,9 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 	public void keyPressed(KeyEvent keyEvent) {
 
-//		Toolkit.getDefaultToolkit().beep(); // ビープ音を鳴らす
-
 		int pressedKey = keyEvent.getKeyCode();
 
 		String keyName = KeyEvent.getKeyText(pressedKey);
-
-
 
 		 System.out.println("");//////////////////////////////////////////
 		 System.out.println("buttonName = " + buttonName);/////////////////
@@ -3383,7 +3517,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 		 System.out.println("keyEvent = " + keyEvent);/////////////////
 		 System.out.println("");//////////////////////////////////////////
 
-		if (mode == 1) {
+		if (mode == 1 || mode == 6 || mode == 7) {
 
 			int moveX = 0;
 			int moveY = 0;
@@ -3510,8 +3644,14 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 
 	private void pushSound() {
+//		Toolkit.getDefaultToolkit().beep(); // ビープ音を鳴らす
+		sound(440f,100);
+	}
+
+	private void sound(float frequency, int soundLength) {
+		// TODO 自動生成されたメソッド・スタブ
 		try {
-			new Sound();
+			new Sound(frequency, soundLength);
 		} catch (LineUnavailableException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
@@ -3520,13 +3660,16 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 	private void selectStyle() {
 
-		if (menuNum < 0) menuNum += menuButton.length;
-		if (menuButton.length <= menuNum) menuNum -= menuButton.length;
-		for (JButton jButton : menuButton) {
-			format(jButton);
+		if (entMark.equals(ent) == false) {
+
+			if (menuNum < 0) menuNum += menuButton.length;
+			if (menuButton.length <= menuNum) menuNum -= menuButton.length;
+			for (JButton jButton : menuButton) {
+				format(jButton);
+			}
+			menuButton[menuNum].setForeground(Color.BLACK);
+			menuButton[menuNum].setBackground(Color.WHITE);
 		}
-		menuButton[menuNum].setForeground(Color.BLACK);
-		menuButton[menuNum].setBackground(Color.WHITE);
 	}
 
 	private void moveMap(int moveX, int moveY) {
@@ -3540,27 +3683,134 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 			x = inRange(originalMap[0].length, x);
 			y = inRange(originalMap.length, y);
 
-			System.out.println("縦" + y + "横" + x);
+			System.out.println("");////////////////////////////////////////
+			System.out.println("縦" + y + "横" + x + "に移動しました");
+			System.out.println("");////////////////////////////////////////
 
-//			移動先でイベント発動
+//			mapNumberが１以外でmapCenterRole()が４と９以外の場合
+			if(isDanger()) {
 
-			buttonName = Command.menu()[0];
+//				移動先でイベント発動
 
-			fieldAction(buttonName);
+				buttonName = Command.menu()[0];
 
-//			count = 0;
+				fieldAction(buttonName);
 
-			actionPerformedSwitch();
+//				count = 0;
 
+				actionPerformedSwitch();
 
-			button_Ent.doClick();
+				button_Ent.doClick();
+			} else {
+
+//				移動先のRoleによって各処理を行う
+				doRole();
+			}
 
 			buttonName = null;
+
 		} else {
 			System.out.println("");////////////////////////////////////////
 			System.out.println("そちらへは移動できません");////////////////
 			System.out.println("");////////////////////////////////////////
 		}
+	}
+
+	private void doRole() {
+
+		switch(mapCenterRole()) {
+
+			case 4:
+				if(mapNumber == 2) { // ダンジョン内の場合
+					setMapNumber(0); // 平原MAPへ移動
+//					洞窟の位置
+					x=8;
+					y=8;
+					musicReset();
+					toNormal();
+
+				} else {
+					System.out.println("");/////////////////////////////////
+					System.out.println("洞窟MAPへ移動します");//////////////
+					System.out.println("");/////////////////////////////////
+
+					setMapNumber(2); // 洞窟MAPへ移動
+//					洞窟入口位置
+					x=7;
+					y=7;
+					musicReset();
+					field(7);
+				}
+				break;
+
+			case 9:
+				if(mapNumber == 1) { // 城内の場合
+					setMapNumber(0); // 平原MAPへ移動
+					x=6;
+					y=6;
+					musicReset();
+					toNormal();
+
+				} else {
+					System.out.println("");/////////////////////////////////
+					System.out.println("城MAPへ移動します");////////////////
+					System.out.println("");/////////////////////////////////
+
+					setMapNumber(1); // 城MAPへ移動
+//					城入口位置
+					x=0;
+					y=3;
+					musicReset();
+					field(6);
+				}
+				break;
+
+			default:
+		}
+		actionPerformedSwitch();
+
+	}
+
+	public void setMapNumber(int mapNumber) {
+
+		this.mapNumber = mapNumber;
+		mapChangeSound();
+	}
+
+	private void mapChangeSound() {
+
+		sound(100f,200);
+		sound(100f,200);
+		sound(100f,200);
+	}
+
+	private boolean isDanger() {
+
+		boolean isDanger = true;
+
+		switch(mapNumber) {
+			case 1:
+				isDanger = false;
+				break;
+			default:
+		}
+
+		switch(mapCenterRole()) {
+			case 4:
+			case 9:
+				isDanger = false;
+				break;
+			default:
+		}
+		System.out.println("");//////////////////////////////////////////
+		System.out.println("mapNumber = " + mapNumber);////////////////
+		System.out.println("");//////////////////////////////////////////
+		System.out.println("mapCenterRole() = " + mapCenterRole());////////////////
+		System.out.println("");//////////////////////////////////////////
+		System.out.println("isDanger = " + isDanger);////////////////
+		System.out.println("");//////////////////////////////////////////
+
+		return isDanger;
 	}
 
 	private int inRange(int range, int num) {
@@ -3581,6 +3831,14 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 		return barrier;
 	}
 
+	private int mapCenterRole() {
+		map2D();
+		int[] mapCenter = centerXY(originalMap);
+		int nextX = mapCenter[0];
+		int nextY = mapCenter[1];
+		return mapData[nextY][nextX].getRole();
+	}
+
 	private int[] centerXY(int[][] baseArray) {
 		int[] centerXY = {baseArray[0].length / 2, baseArray.length / 2};
 		return centerXY;
@@ -3588,30 +3846,6 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 	public void keyReleased(KeyEvent keyEvent) {
 
-//		int pressedKey = keyEvent.getKeyCode();
-//
-//		switch(pressedKey) {
-//
-//			case KeyEvent.VK_ENTER:
-//			case KeyEvent.VK_SPACE:
-//			case KeyEvent.VK_1:
-//
-//				buttonName = ent;
-//				System.out.println("");//////////////////////////////////////////
-//				System.out.println(ent + "KEYが離されました");////////////
-//				System.out.println("");//////////////////////////////////////////
-//
-//				buttonName = null;
-//
-//				System.out.println("");//////////////////////////////////////////
-//				System.out.println("buttonName = " + buttonName);////////////////
-//				System.out.println("");//////////////////////////////////////////
-//
-//				break;
-//
-//			default:
-//				break;
-//		}
 	}
 
 	private void clickButton(String s) {// /////////////

@@ -1,19 +1,11 @@
 package iwamih31.RPGwin;
 
 public class MapPiece {
-	private int role;
 	private String image;
+	private int role;
 
 	public MapPiece(String image, int role) {
-		this.role = role;
 		this.image = image;
-	}
-
-	public int getRole() {
-		return role;
-	}
-
-	public void setRole(int role) {
 		this.role = role;
 	}
 
@@ -23,6 +15,14 @@ public class MapPiece {
 
 	public void setImage(String image) {
 		this.image = image;
+	}
+
+	public int getRole() {
+		return role;
+	}
+
+	public void setRole(int role) {
+		this.role = role;
 	}
 
 }

@@ -8,14 +8,16 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
 public class Sound {
-	public Sound() throws LineUnavailableException {
-		SquareWave wave = new SquareWave(440F, (byte)10, 44100);
+
+	public Sound(float frequency, int soundLength) throws LineUnavailableException {
+
+		SquareWave wave = new SquareWave(frequency, (byte)10, 44100);
 
 		SourceDataLine line = AudioSystem.getSourceDataLine(wave.getAudioFormat());
 		line.open(wave.getAudioFormat());
 		line.start();
 
-		InputStream in = wave.getInputStream(100); // 音の長さ
+		InputStream in = wave.getInputStream(soundLength); // 音の長さ
 
 		byte[] b = new byte[1024];
 		int len = 0;
@@ -29,6 +31,13 @@ public class Sound {
 		}
 		line.close();
 	}
+
+	public Sound() throws LineUnavailableException {
+
+		this(440f,100);
+
+	}
+
 }
 
 

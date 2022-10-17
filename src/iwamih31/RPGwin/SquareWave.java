@@ -18,7 +18,7 @@ public class SquareWave {
 	private byte[] data;
 
 	public SquareWave(float frequency, byte amplitude, float sampleRate) {
-	this.frequency = frequency;
+	this.setFrequency(frequency);
 	this.amplitude = amplitude;
 	this.sampleRate = sampleRate;
 
@@ -44,6 +44,14 @@ public class SquareWave {
 
 	public InputStream getInputStream(int playTime) {
 	return new WaveInputStream(playTime);
+	}
+
+	public float getFrequency() {
+		return frequency;
+	}
+
+	public void setFrequency(float frequency) {
+		this.frequency = frequency;
 	}
 
 	//データのアクセス用に InputStream を使うことにしました。
