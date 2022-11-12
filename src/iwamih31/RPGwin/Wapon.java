@@ -3,8 +3,8 @@ package iwamih31.RPGwin;
 import javax.swing.table.AbstractTableModel;
 
 public class Wapon extends AbstractTableModel{
-	
-	
+
+
 	private static Object itemList[][] = {
 		{""  ,""        ,"" ,""          ,"｛ "},
 		{"１.","ヒロポン","(", 20 * lev(),"G) "},
@@ -14,27 +14,40 @@ public class Wapon extends AbstractTableModel{
 
 	private Object[][] shop;
 	private static String[] shopText;
-	
+
 	public Wapon(int i){
-		
+
 		Member member = Main.getParty()[i];
-		
-		int wp1 = (member.getWp() + 1) * (member.getWp() + 1) * (member.getWp() + 1);
-		int wp2 = (member.getWp() + 2) * (member.getWp() + 2) * (member.getWp() + 2);
-		int wp3 = (member.getWp() + 3) * (member.getWp() + 3) * (member.getWp() + 3);
-		
-		int minus1 = (member.getWp() + 1 - 1);
-		int minus2 = (member.getWp() + 2 - 1);
-		int minus3 = (member.getWp() + 3 - 1);
-		
+
+
+
+		int wp1 = member.getWp() + 1;
+		if (9 < wp1) wp1 = 9;
+		int wp2 = member.getWp() + 2;
+		if (9 < wp2) wp2 = 9;
+		int wp3 = member.getWp() + 3;
+		if (9 < wp3) wp3 = 9;
+
+		int price1 = wp1 * wp1 * wp1 * 200;
+		int price2 = wp2 * wp2 * wp2 * 200;
+		int price3 = wp3 * wp3 * wp3 * 200;
+
+		int minus1 = (wp1 - 1) * 1000;
+		int minus2 = (wp2 - 1) * 1000;
+		int minus3 = (wp3 - 1) * 1000;
+
+		String weapon1 = member.getWeapon()[wp1];
+		String weapon2 = member.getWeapon()[wp2];
+		String weapon3 = member.getWeapon()[wp3];
+
 		itemList = new Object[][]{
-			{""   ,""                                  ,"" ,""                            ,"｛ " },
-			{"１.",member.getWeapon()[member.getWp()+1],"" ,""                            ,""    },
-			{""   ,"攻=" + member.attack(1)            ,"(", (wp1 * 200) - (minus1 * 1000), "G) "},
-			{"２.",member.getWeapon()[member.getWp()+2],"" ,""                            ,""    },
-			{""   ,"攻=" + member.attack(2)            ,"(", (wp2 * 200) - (minus2 * 1000), "G) "},
-			{"３.",member.getWeapon()[member.getWp()+3],"" ,""                            ,""    },
-			{"   ","攻=" + member.attack(3)            ,"(", (wp3 * 200) - (minus3 * 1000), "G) "},
+			{""   , ""                         , "" , ""             , "｛ "},
+			{"１.", weapon1                    , "" , ""             , ""   },
+			{""   , "攻=" + member.attack(wp1) , "(", price1 - minus1, "G) "},
+			{"２.", weapon2                    , "" , ""             , ""   },
+			{""   , "攻=" + member.attack(wp2) , "(", price2 - minus2, "G) "},
+			{"３.", weapon3                    , "" , ""             , ""   },
+			{"   ", "攻=" + member.attack(wp3) , "(", price3 - minus3, "G) "},
 		};
 	}
 

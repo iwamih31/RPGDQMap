@@ -798,34 +798,39 @@ public class Main extends AbstractTableModel implements Serializable{
 		switch (i) {
 			case 1 :
 
-				setG(getG() - innG);
-				Battle.pTable();
-				System.out.println("");
-				System.out.println(name + "は、宿で体を休めた・・・");
-//				Input.ent( );
+				if(getG() < innG) {
+					System.out.print("お金が足りません");
+				} else {
 
-				array.add(name + "は、宿で体を休めた・・・");
+					setG(getG() - innG);
+					Battle.pTable();
+					System.out.println("");
+					System.out.println(name + "は、宿で体を休めた・・・");
+//					Input.ent( );
 
-				Battle.pTable();
-				System.out.println("");
-				System.out.println(name + "は、宿で体を休めた・・・");
-				System.out.println("");
-				Battle.pTable();
-				scroll(10);
-				Battle.inn();
-				Battle.pTable();
-				System.out.println("");
-				System.out.println("♪♪♪旅の疲れが癒された ♪♪♪");
-//				Input.ent( );
+					array.add(name + "は、宿で体を休めた・・・");
 
-				array.add("♪♪♪旅の疲れが癒された ♪♪♪");
+					Battle.pTable();
+					System.out.println("");
+					System.out.println(name + "は、宿で体を休めた・・・");
+					System.out.println("");
+					Battle.pTable();
+					scroll(10);
+					Battle.inn();
+					Battle.pTable();
+					System.out.println("");
+					System.out.println("♪♪♪旅の疲れが癒された ♪♪♪");
+//					Input.ent( );
 
-				Battle.pTable();
-				System.out.println("");
-				System.out.println("[所持金＝ " + getG() + "G ]");
-//				Input.ent( );
+					array.add("♪♪♪旅の疲れが癒された ♪♪♪");
 
-				array.add("[所持金＝ " + getG() + "G ]");
+					Battle.pTable();
+					System.out.println("");
+					System.out.println("[所持金＝ " + getG() + "G ]");
+//					Input.ent( );
+
+					array.add("[所持金＝ " + getG() + "G ]");
+				}
 				break;
 			case 3 :
 				Battle.status();
@@ -913,20 +918,27 @@ public class Main extends AbstractTableModel implements Serializable{
 			case 1:
 				Screen.setMode(445);
 
-				select.setHp((int) (select.getAp() * 5));
-				select.setMp((int) (select.getEp() * 2));
-				Main.setG(Main.getG() - remG);
-				Battle.pTable();
-				System.out.println("");
-				System.out.println(select.getName() + "は生き返った!!!");
-//				Input.ent();
-				array.add(select.getName() + "は生き返った!!!");
+				if (Main.getG() < remG) {
+					array.add("お金が足りません!!");
 
-				Battle.pTable();
-				System.out.println("");
-				System.out.println("  [所持金＝ " + getG() + "G ]");
-//				Input.ent();
-				array.add("  [所持金＝ " + getG() + "G ]");
+				} else {
+
+					select.setHp((int) (select.getAp() * 5));
+					select.setMp((int) (select.getEp() * 2));
+					Main.setG(Main.getG() - remG);
+					Battle.pTable();
+					System.out.println("");
+					System.out.println(select.getName() + "は生き返った!!!");
+//					Input.ent();
+					array.add(select.getName() + "は生き返った!!!");
+
+					Battle.pTable();
+					System.out.println("");
+					System.out.println("  [所持金＝ " + getG() + "G ]");
+//					Input.ent();
+					array.add("  [所持金＝ " + getG() + "G ]");
+				}
+
 				break;
 			}
 		setText(array);

@@ -35,15 +35,15 @@ public class Hero extends Member {
 		int r = ((getLev() * getAp()) + (getWp() * 12)) * Battle.fly;
 		return r;
 	}
-	
+
 	@Override
 	public int attack(int ud) {
 		if(Battle.fly==0) Battle.fly = 1;
-		int r = ((getLev() * getAp()) + ((getWp() + ud) * 12));
+		int r = ((getLev() * getAp()) + (ud * 12));
 		return r;
 	}
-	
-	
+
+
 
 
 	@Override

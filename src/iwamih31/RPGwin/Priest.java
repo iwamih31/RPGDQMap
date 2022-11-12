@@ -31,10 +31,10 @@ public class Priest extends Member {
 		int r = ((getLev() * getAp()) + (getWp() * 5));
 		return r;
 	}
-	
+
 	@Override
 	public int attack(int ud) {
-		int r = ((getLev() * getAp()) + ((getWp() + ud) * 5));
+		int r = ((getLev() * getAp()) + (ud * 5));
 		return r;
 	}
 
@@ -43,12 +43,12 @@ public class Priest extends Member {
 //		Battle.pTable();
 //		System.out.println( "" );
 		System.out.print( "どの術を使いますか？" );
-		
+
 //		new Bless( this );
 	}
-	
+
 //	public String[] getWeapon() {
-//		
+//
 //		 getWeapon()[ 0 ] ="木の棒"    ;
 //		 getWeapon()[ 1 ] ="樫の杖"    ;
 //		 getWeapon()[ 2 ] ="竹やり"    ;
@@ -59,7 +59,7 @@ public class Priest extends Member {
 //		 getWeapon()[ 7 ] ="円月剣"    ;
 //		 getWeapon()[ 8 ] ="神官の杖"  ;
 //		 getWeapon()[ 9 ] ="神の十字架";
-//		 
+//
 //		 return getWeapon();
 //	}
 }

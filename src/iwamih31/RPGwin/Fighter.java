@@ -29,15 +29,15 @@ public class Fighter extends Member {
 
 	 @Override
 	 public int attack() {
-		
+
 		int r = ((getLev() * getAp()) + (getWp() * 10));
-			
+
 		return r;
 	 }
-	 
+
 	 @Override
 	 public int attack(int ud) {
-		int r = ((getLev() * getAp()) + ((getWp() + ud) * 10));
+		int r = ((getLev() * getAp()) + (ud * 10));
 		return r;
 	 }
 

@@ -33,7 +33,7 @@ public abstract class Member extends Character implements Serializable{
 		int dp = ( lev * ap );
 		return dp;
 	}
-	
+
 	public int attack(int ud) {
 		int dp = ( lev * ap + ud * 1);
 		return dp;
@@ -94,10 +94,16 @@ public abstract class Member extends Character implements Serializable{
 	}
 
 	public void wep(int ud) {
+
+		if ( weapon.length <= wp + ud) ud = 0;
+
 		System.out.print( "[ 武器＝" + weapon[wp + ud] + " 攻撃力＝" + attack(ud) + " ]");
 	}
-	
+
 	public String wepName(int ud) {
+
+		if ( weapon.length <= wp + ud) ud = 0;
+
 		return weapon[wp + ud];
 	}
 

@@ -44,7 +44,6 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 	String op2;
 	String operator;
 	int opMode;
-	private int blank;
 	private static JLabel q;
 	private static Object[] ynList;
 	private JTextArea inpT;
@@ -66,16 +65,13 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 	private Ex useEx;
 	private JPanel eventPanel;
 	private JPanel backPanel;
-	private String eventImage;
 	private int imageCode;
 	private String cancel;
 	private MapPiece[][] mapData;
 	private JLabel[][] drawMap;
 	private JPanel mapPanel;
-	private JPanel centerPanel;
 	private ImageIcon centerIcon;
 	private JLabel centerLabel;
-	private boolean isKeyPresse;
 	private JButton button_Ent;
 	private JButton[] menuButton;
 	private JButton cancelButton;
@@ -180,7 +176,9 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 		imageURL =  "image/";
 
-		eventImage = "エアー.png";
+		music = null;
+
+		repeatMusic("opening");
 
 		outer();
 	}
@@ -251,7 +249,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 	private static JPanel panelSetNCS(Object north, Object center, Object south) {
 		JPanel panelSet = new JPanel();
-		format(panelSet, 100, 100);
+		format(panelSet);
 		panelSet.setLayout(new BorderLayout());
 		if (north != null) {
 			panelSet.add((Component) north, BorderLayout.NORTH);
@@ -338,27 +336,25 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 		change("通常");
 	}
 
-	private static void changeMap() {
-
-		panelSet_M();
-		change("通常");
-	}
-
 	private static JPanel panelSet() {
 
-		JPanel panelSetC = new JPanel();
-		format(panelSetC);
+//		JPanel panelSetC = new JPanel();
+//		format(panelSetC);
+//		panelSetC.setPreferredSize(new Dimension(w*70, h*100));
+//		panelSetC.setLayout(new BoxLayout(panelSetC, BoxLayout.Y_AXIS));
+//		panelSetC.add(panelN);
+//		panelSetC.add(panelC);
+//		panelSetC.add(panelS);
+
+		JPanel panelSetC = panelSetNCS(panelN, panelC, panelS);
 		panelSetC.setPreferredSize(new Dimension(w*70, h*80));
-		panelSetC.setLayout(new BoxLayout(panelSetC, BoxLayout.Y_AXIS));
-		panelSetC.add(panelN);
-		panelSetC.add(panelC);
-		panelSetC.add(panelS);
 
 		panelSet = new JPanel();
 		format(panelSet);
 		panelSet.setLayout(new FlowLayout());
 		panelSet.add(panelW);
 		panelSet.add(b());
+//		panelSet.add(panelSetC);
 		panelSet.add(panelSetC);
 		panelSet.add(b());
 		panelSet.add(panelE);
@@ -366,41 +362,24 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 		return panelSet;
 
 	}
-
-	private static JPanel panelSet_M() {
-
-		JPanel panelSetC = new JPanel();
-		format(panelSetC);
-		panelSetC.setPreferredSize(new Dimension(w*70, h*80));
-		panelSetC.setLayout(new BoxLayout(panelSetC, BoxLayout.Y_AXIS));
-		panelSetC.add(panelN);
-		panelSetC.add(panelC);
-		panelSetC.add(panelS);
-
-		panelSet = new JPanel();
-		format(panelSet);
-		panelSet.setLayout(new FlowLayout());
-		panelSet.add(panelW);
-		panelSet.add(b());
-		panelSet.add(panelSetC);
-		panelSet.add(b());
-		panelSet.add(panelE);
-
-		return panelSet;
-
-	}
-
-
 
 	private static void centerSet(Object west, Object center, Object east) {
 
 		JLabel space = labelSet("                                       ");
 		JPanel panelQ = panelSetWCE(west, center, east);
 		JPanel panelQA = panelSetWCE(space, panelQ, space);
-		int rows = 7;
-		int columns = 75;
-		JTextArea blankAreaN = textAreaSet(" ",rows,columns);
-		JTextArea blankAreaS = textAreaSet(" ",rows,columns);
+
+
+//		int rows = 7;
+//		int columns = 10;
+//		JTextArea blankAreaN = textAreaSet(" ",rows,columns);
+//		JTextArea blankAreaS = textAreaSet(" ",rows,columns);
+
+		JLabel blankAreaN = labelSet("");
+		blankAreaN.setPreferredSize(new Dimension(w*2, h*20));
+
+		JLabel blankAreaS = labelSet("");
+		blankAreaS.setPreferredSize(new Dimension(w*2, h*30));
 
 		panelC = panelSetNCS(blankAreaN, panelQA,blankAreaS);
 
@@ -464,10 +443,11 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 		labelC = labelSet(tex);
 
 		JPanel bPanel = new JPanel();
-		format(bPanel,100,500);
+		format(bPanel);
 		bPanel.setLayout(new GridLayout(2, 0, 0, 0));
+		bPanel.setPreferredSize(new Dimension(w*5, h/2));
 
-		JButton[] button = new JButton[2];// /////////////////ボタンの数
+		JButton[] button = new JButton[2];////////////////////ボタンの数
 
 		for (int i = 0; i < 2; i++) {
 			String bN = (String) ynList[i];
@@ -488,44 +468,57 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 	private void inputName(String s) {
 
-			buttonName = null;
+		buttonName = null;
 
-			inpT = new JTextArea(1, 7);
+		inpT = new JTextArea(1, 8);
 
-			format(inpT);
+		format(inpT);
 
-			inpT.setBorder(border());
+		inpT.setBorder(border());
+//		inpT.setPreferredSize(new Dimension(w*2, h/5));
 
-			JPanel bPanel = new JPanel();
-			format(bPanel,100, 500);
-			bPanel.setLayout(new GridLayout(0, 2, 0, 0));
-			bPanel.setPreferredSize(new Dimension(60, 20));
+		JPanel bPanel = new JPanel();
+		format(bPanel);
+		bPanel.setLayout(new GridLayout(1, 0, 0, 0));
 
-			int bI = 1;// //////////////////////////////////ボタンの数
+//		bPanel.setPreferredSize(new Dimension(w*2, h/5));
+//		bPanel.setPreferredSize(new Dimension(60, 20));
 
-			JButton[] button = new JButton[bI];
+		int bI = 1;/////////////////////////////////////ボタンの数
 
-			String[] bList = { "OK" };
+		JButton[] button = new JButton[bI];
 
-			for (int i = 0; i < bI; i++) {
-				String bN = (String) bList[i];
-				button[i] = new JButton(bN);
-				format(button[i],20,10);
-//				button[i].setMargin(new Insets(20, 10, 20, 10));///////文字周りの幅
-				button[i].setFocusPainted(false);
-				button[i].addActionListener(this);
-				button[i].addKeyListener(this);
-				button[i].setBorder(border());
-				bPanel.add(button[i]);
-			}
+		String[] bList = { "OK" };
 
-			q = labelSet(tex);
-
-			JPanel a = panelSetLR(inpT, bPanel);
-
-			centerSet(space, q, a);
-
+		for (int i = 0; i < bI; i++) {
+			String bN = (String) bList[i];
+			button[i] = new JButton(bN);
+			format(button[i]);
+			button[i].setPreferredSize(new Dimension(w*2, h*2));
+			button[i].setMargin(new Insets(20, 10, 20, 10));///////文字周りの幅
+			button[i].setFocusPainted(false);
+			button[i].addActionListener(this);
+			button[i].addKeyListener(this);
+			button[i].setBorder(border());
+			bPanel.add(button[i]);
 		}
+
+		q = labelSet(tex);
+//		q.setPreferredSize(new Dimension(w*2, h/2));
+
+		JLabel blankAreaN = labelSet("");
+		blankAreaN.setPreferredSize(new Dimension(w*2, h*4));
+		JLabel blankAreaS = labelSet("");
+		blankAreaS.setPreferredSize(new Dimension(w*2, h*4));
+		JPanel a = panelSetLR(inpT, bPanel);
+		JPanel answer = panelSetNCS(blankAreaN, a, blankAreaS);
+
+//		a.setPreferredSize(new Dimension(w*5, h/5));
+
+
+		centerSet(space, q, answer);
+
+	}
 
 	private void begin() {
 		tex = "     主人公の名前は何にしますか？";
@@ -547,7 +540,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 //			panel.setBorder(border);
 		panel.setPreferredSize(new Dimension(w * 10, h * 50));
 
-		menuButton = new JButton[mList.length];// /////////////////ボタンの数
+		menuButton = new JButton[mList.length];////////////////////ボタンの数
 
 		for (int i = 0; i < (mList.length); i++) {
 			String bN =  String.valueOf(mList[i]);
@@ -591,6 +584,10 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 		String select = e.getActionCommand();
 
+		System.out.println("");////////////////////////////////////////////
+		System.out.println("[" + select + "]ボタンがクリックされました");//
+		System.out.println("");////////////////////////////////////////////
+
 		if(select.equals(buttonName)){ // 同じボタン名がクリックされたら
 			// クリックしたボタン名はent
 			buttonName = ent;
@@ -600,9 +597,9 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 		}
 
 
-		System.out.println("");// ////////////////////////////////////////
-		System.out.println("buttonName = " + buttonName);// //////////////////////////
-		System.out.println("");// ////////////////////////////////////////
+		System.out.println("");///////////////////////////////////////////
+		System.out.println("buttonName = " + buttonName);/////////////////
+		System.out.println("");///////////////////////////////////////////
 
 		actionPerformedSwitch();
 
@@ -610,17 +607,17 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 	public void actionPerformedSwitch() {
 
-		System.out.println("");// ////////////////////////////////////////
-		System.out.println("mode = " + mode);// //////////////////////////
-		System.out.println("");// ////////////////////////////////////////
+		System.out.println("");///////////////////////////////////////////
+		System.out.println("mode = " + mode);/////////////////////////////
+		System.out.println("");///////////////////////////////////////////
 
-		System.out.println("");// ////////////////////////////////////////
-		System.out.println("buttonName = " + buttonName);// //////////////////////////
-		System.out.println("");// ////////////////////////////////////////
+		System.out.println("");///////////////////////////////////////////
+		System.out.println("buttonName = " + buttonName);/////////////////
+		System.out.println("");///////////////////////////////////////////
 
-		System.out.println("");// ////////////////////////////////////////
-		System.out.println("count = " + count);// //////////////////////////
-		System.out.println("");// ////////////////////////////////////////
+		System.out.println("");///////////////////////////////////////////
+		System.out.println("count = " + count);///////////////////////////
+		System.out.println("");///////////////////////////////////////////
 
 		// フォーカスをframeに持ってくる
 		frame.setFocusable(true);
@@ -634,6 +631,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 		System.out.println("frameのキー入力を有効化しました");////////
 		System.out.println("");/////////////////////////////////////
 
+//		JOptionPane.showMessageDialog(null, "mode = " + mode);
 
 		actionPerformedSwitch0();
 
@@ -656,11 +654,6 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 		switch (mode) {
 
 			case 0 ://最初
-
-				if (music == null) {
-					music = new Music("media/オープニング.mp3");
-					music.playRepeat();
-				}
 
 				if (buttonName.equals(ynList[0])) {
 					musicReset();
@@ -699,18 +692,12 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 				break;
 
 			case 6 ://お城
-				if (music == null) {
-					music = new Music("media/オープニング.mp3");
-					music.playRepeat();
-				}
+				repeatMusic("オープニング");
 				field(6);
 				break;
 
 			case 7 ://ダンジョン
-				if (music == null) {
-					music = new Music("media/オープニング.mp3");
-					music.playRepeat();
-				}
+				repeatMusic("オープニング");
 				field(7);
 				break;
 
@@ -727,6 +714,9 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 
 	private void opening() {
+//		JOptionPane.showMessageDialog(null, "opening() します");
+		x = 6;
+		y = 6;
 
 		if (buttonName.equals("OK")) {
 			yName = null;
@@ -737,9 +727,9 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 			for (int i = 0; i < chars.length; i++) {
 				p += (String.valueOf(chars[i]).getBytes().length);
 			}
-			System.out.println("");// ////////////////////////////////////////
-			System.out.println("文字バイト数 = " + p);// //////////////////////////
-			System.out.println("");// ////////////////////////////////////////
+			System.out.println("");///////////////////////////////////////////
+			System.out.println("文字バイト数 = " + p);/////////////////////////////
+			System.out.println("");///////////////////////////////////////////
 
 			while (yName == null) {
 				if (p < 8) {
@@ -749,14 +739,14 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 					Main.setyName(inputName);
 					yName = inputName;
 
-					System.out.println("");// ////////////////////////////////////////
-					System.out.println("yName = " + yName);// //////////////////////////
-					System.out.println("");// ////////////////////////////////////////
+					System.out.println("");///////////////////////////////////////////
+					System.out.println("yName = " + yName);/////////////////////////////
+					System.out.println("");///////////////////////////////////////////
 				} else {
 
-					System.out.println("");// ////////////////////////////////////////
-					System.out.println("yName = " + yName);// //////////////////////////
-					System.out.println("");// ////////////////////////////////////////
+					System.out.println("");///////////////////////////////////////////
+					System.out.println("yName = " + yName);/////////////////////////////
+					System.out.println("");///////////////////////////////////////////
 
 					buttonName.equals(null);
 					tex = "もう少し短い名前でお願いします";
@@ -764,6 +754,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 					inputName("名前");
 				}
 			}
+//			JOptionPane.showMessageDialog(null, "yName = " + yName);
 			Main.begin();
 			story = new Story();
 			story.on("  ・・・ある日[ " + yName + " ]は、王様に呼び出された・・・");
@@ -772,13 +763,13 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 		if (buttonName.equals(ent)) {
 
-			System.out.println("");// ////////////////////////////////////////
-			System.out.println("buttonName = " + buttonName);// //////////////////////////
-			System.out.println("");// ////////////////////////////////////////
+			System.out.println("");///////////////////////////////////////////
+			System.out.println("buttonName = " + buttonName);/////////////////////////////
+			System.out.println("");///////////////////////////////////////////
 
-			System.out.println("");// ////////////////////////////////////////
-			System.out.println("count = " + count);// //////////////////////////
-			System.out.println("");// ////////////////////////////////////////
+			System.out.println("");///////////////////////////////////////////
+			System.out.println("count = " + count);/////////////////////////////
+			System.out.println("");///////////////////////////////////////////
 
 			if (count < story.getTextList().length) {
 
@@ -810,13 +801,13 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 		}
 	}
 
-	private void field() {
+	private void field(int modeNum) {
 
-		System.out.println("");//////////////////////////////////////////
-		System.out.println("field() します");////////////////////////////
-		System.out.println("");//////////////////////////////////////////
+		System.out.println("");////////////////////////////////////////
+		System.out.println("field(" + modeNum + ") します");///////////
+		System.out.println("");////////////////////////////////////////
 
-		setMode(1);/////////////////////////////////// ?
+		setMode(modeNum);
 
 		buttonName = null;
 
@@ -846,25 +837,6 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 		change();
 
-	}
-
-	private void field(int modeNum) {
-
-		System.out.println("");////////////////////////////////////////
-		System.out.println("field(" + modeNum + ") します");///////////
-		System.out.println("");////////////////////////////////////////
-
-		setMode(modeNum);
-
-		buttonName = null;
-
-		partySt();
-		info(goldList(),itemList(),"");
-		scene();
-		menu(Command.menu());
-		comment();
-
-		change();
 	}
 
 	private void use() {
@@ -978,9 +950,8 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 			case 14 ://戦闘
 
-					music.stop();
-					music = new Music("media/戦闘のテーマ.mp3");
-					music.playRepeat();
+				musicReset();
+				repeatMusic("戦闘のテーマ");
 
 				setMode(5);
 				adventure();
@@ -1325,7 +1296,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 		for (int i = 0; i < menu.length; i++) {
 
 			if (setButtonName.equals(menu[i])) {
-				setMode(211+i);
+				setMode(211 + i);
 				Item.use(user, i);
 				who();
 			}
@@ -1402,95 +1373,6 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 		}
 	}
 
-
-	private void itemMenu1(int who) {
-
-		System.out.println("");////////////////////////////////
-		System.out.println("itemMenu1(" + who + ") します");///
-		System.out.println("");////////////////////////////////
-
-		String[] text = Item.getItemText();
-
-		if (count < text.length) {
-
-			setMessageEnt(text[count]);
-
-			if (count == 0) {
-				Item.who1(who);
-			}
-
-			count = (count + 1);
-
-			item();
-
-		} else {
-
-			toNormal();
-
-		}
-	}
-
-	private void battleItemMenu1(int who) {
-
-		System.out.println("");////////////////////////////////
-		System.out.println("itemMenu1(" + who + ") します");///
-		System.out.println("");////////////////////////////////
-
-		String[] text = Item.getItemText();
-
-		if (count < text.length) {
-
-			setMessageEnt(text[count]);
-
-			if (count == 0) {
-				Item.who1(who);
-			}
-
-			count = (count + 1);
-
-			battle();
-
-		} else {
-
-			if (Battle.getfMode() == 0) {
-				toNormal();
-			}else{
-				count = 0;
-//				setMode(50);
-				Main.getBat().turn();
-				menu = Battle.getMenu();
-//				battle();
-			}
-		}
-	}
-
-	private void itemMenu4(int who) {
-		// TODO 自動生成されたメソッド・スタブ
-
-		System.out.println("");////////////////////////////////
-		System.out.println("itemMenu1(" + who + ") します");///
-		System.out.println("");////////////////////////////////
-
-		String[] text = Item.getItemText();
-
-		if (count < text.length) {
-
-			setMessageEnt(text[count]);
-
-			if (count == 0) {
-				Item.who4(who);
-			}
-
-			count = (count + 1);
-
-			item();
-
-		} else {
-
-			toNormal();
-
-		}
-	}
 
 	public void actionPerformedSwitch22() {
 
@@ -2257,10 +2139,13 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 			case 50 ://戦闘,メンバー
 
+//				JOptionPane.showMessageDialog(null, "mode = " + mode);
+
+				buttonName = null;
 				setMessage(Battle.getBattleText()[0]);
 				menu = Battle.getMenu();
-				setMode(55);
 				battle();
+				setMode(55);
 
 				break;
 
@@ -2277,8 +2162,20 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 					attack();
 				}
 				if (menu[1].equals(buttonName)) {//道具
+
 					Main.getBat().pSelect(1);
-					setMode(551);
+
+					buttonName = null;
+
+					Member user = Main.getParty()[Battle.getActor()];
+
+					setMessage(user.getName() + " は、どのアイテムを使いますか？");
+
+					menu = Item.menu();
+
+					battle();
+
+					setMode(21);
 				}
 				if (menu[2].equals(buttonName)) {//能力
 					Main.getBat().pSelect(2);
@@ -2338,15 +2235,17 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 			case 551 ://戦闘,メンバー,道具
 
-				buttonName = null;
-
-				setMessage("どのアイテムを使いますか？");
-
-				menu = Item.menu();
-
-				battle();
-
-				setMode(21);
+//				JOptionPane.showMessageDialog(null, "mode = " + mode);
+//
+//				buttonName = null;
+//
+//				setMessage("どのアイテムを使いますか？");
+//
+//				menu = Item.menu();
+//
+//				battle();
+//
+//				setMode(21);
 
 				break;
 
@@ -2472,7 +2371,9 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 	private void repeatMusic(String musicName) {
 		if (music == null) {
-			music = new Music("media/" + musicName + ".mp3");
+
+			music = new Music(musicName);
+
 			music.playRepeat();
 		}
 	}
@@ -2767,7 +2668,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 		pTab.setRowHeight(fontSize * 2);
 		pTab.setShowVerticalLines(true);// 縦枠
 		pTab.setShowHorizontalLines(false);// 横枠
-		pTab.setPreferredSize(new Dimension(w*70, h*6));
+//		pTab.setPreferredSize(new Dimension(w*70, h*6));
 		pTab.setBorder(border());
 
 		DefaultTableCellRenderer tableCellRendererC = new DefaultTableCellRenderer();
@@ -2806,7 +2707,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 		pTab.setRowHeight(fontSize * 2);
 		pTab.setShowVerticalLines(true);// 縦枠
 		pTab.setShowHorizontalLines(false);// 横枠
-		pTab.setPreferredSize(new Dimension(w*70, h*6));
+//		pTab.setPreferredSize(new Dimension(w*70, h*6));
 		pTab.setBorder(border());
 
 		DefaultTableCellRenderer tableCellRendererC = new DefaultTableCellRenderer();
@@ -2828,19 +2729,19 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 		setBackPanel(imageURL + "バトル.png");
 
-		ImageIcon icon0 = new ImageIcon(drawMonster(0));
+		ImageIcon icon0 = createImageIcon(drawMonster(0));
 		JLabel label0 = new JLabel(icon0);
 
-		ImageIcon icon1 = new ImageIcon(drawMonster(1));
+		ImageIcon icon1 = createImageIcon(drawMonster(1));
 		JLabel label1 = new JLabel(icon1);
 
-		ImageIcon icon2 = new ImageIcon(drawMonster(2));
+		ImageIcon icon2 = createImageIcon(drawMonster(2));
 		JLabel label2 = new JLabel(icon2);
 
-		ImageIcon icon3 = new ImageIcon(drawMonster(3));
+		ImageIcon icon3 = createImageIcon(drawMonster(3));
 		JLabel label3 = new JLabel(icon3);
 
-		ImageIcon iconItem = new ImageIcon(drawItem());
+		ImageIcon iconItem = createImageIcon(drawItem());
 		JLabel labelItem = new JLabel(iconItem);
 
 		JPanel monsterPanel = new JPanel();
@@ -2859,23 +2760,25 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 			if (Battle.mons[3].getHp() > 0) monsterPanel.add(label3);
 		}
 
-		JPanel battlePanel = new JPanel();
-		format(battlePanel);
-		battlePanel.setPreferredSize(new Dimension(890, 200));
+		JPanel scenePanel = new JPanel();
+		format(scenePanel);
+		scenePanel.setPreferredSize(new Dimension(890, 200));
 		SpringLayout layout = new SpringLayout();
-		battlePanel.setLayout(layout);
-		layout.putConstraint(SpringLayout.NORTH, backPanel, 1, SpringLayout.NORTH, battlePanel);
-		layout.putConstraint(SpringLayout.NORTH, monsterPanel, 1, SpringLayout.NORTH, battlePanel);
-		layout.putConstraint(SpringLayout.WEST, backPanel, 5, SpringLayout.WEST, battlePanel);
-		layout.putConstraint(SpringLayout.WEST, monsterPanel, 5, SpringLayout.WEST, battlePanel);
-		layout.putConstraint(SpringLayout.EAST, backPanel, 5, SpringLayout.EAST, battlePanel);
-		layout.putConstraint(SpringLayout.EAST, monsterPanel, 5, SpringLayout.EAST, battlePanel);
-		battlePanel.add(monsterPanel);
-		battlePanel.add(backPanel);
+		scenePanel.setLayout(layout);
+		layout.putConstraint(SpringLayout.NORTH, backPanel, 1, SpringLayout.NORTH, scenePanel);
+		layout.putConstraint(SpringLayout.NORTH, monsterPanel, 1, SpringLayout.NORTH, scenePanel);
+		layout.putConstraint(SpringLayout.WEST, backPanel, 5, SpringLayout.WEST, scenePanel);
+		layout.putConstraint(SpringLayout.WEST, monsterPanel, 5, SpringLayout.WEST, scenePanel);
+		layout.putConstraint(SpringLayout.EAST, backPanel, 5, SpringLayout.EAST, scenePanel);
+		layout.putConstraint(SpringLayout.EAST, monsterPanel, 5, SpringLayout.EAST, scenePanel);
+		scenePanel.add(monsterPanel);
+		scenePanel.add(backPanel);
 
 		JTextArea monsterBlank = textAreaSet(" ", 1, 10);
 
-		panelC = panelSetNCS(battlePanel, stPanel,monsterBlank);
+		JPanel battlePanel = panelSetUD(scenePanel, stPanel);
+
+		panelC = panelSetNCS(monsterBlank, battlePanel,monsterBlank);
 
 	}
 
@@ -3046,7 +2949,11 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 			for (int j = 0; j < map[i].length; j++) {
 				mapData[i][j] = mapPiece(map[i][j]);
 				String mapImage = mapData[i][j].getImage();
-				ImageIcon icon = new ImageIcon("image_map/" + mapImage + ".png");
+
+//				ImageIcon icon = new ImageIcon("image_map/" + mapImage + ".png");
+
+				ImageIcon icon = createImageIcon("image_map/" + mapImage + ".png");
+
 				drawMap[i][j] = new JLabel(icon);
 				if(i == map.length / 2 && j == map[0].length /2) {
 					row.add(mapCenter(drawMap[i][j]));
@@ -3054,6 +2961,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 					row.add(drawMap[i][j]);
 				}
 			}
+
 			mapPanel.add(row);
 		}
 
@@ -3063,11 +2971,17 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 	}
 
+	private ImageIcon createImageIcon(String imageUrl) {
+
+		ClassLoader classLoader = this.getClass().getClassLoader();
+		return new ImageIcon(classLoader.getResource(imageUrl));
+	}
+
 	private JPanel mapCenter(JLabel centerPiecelabel) {
 
 		String centerImage = "勇者";
 
-		centerIcon = new ImageIcon("image_map/" + centerImage + ".png");
+		centerIcon = createImageIcon("image_map/" + centerImage + ".png");
 		centerLabel = new JLabel(centerIcon);
 
 		JPanel panel = new JPanel();
@@ -3084,7 +2998,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 	private JPanel setBackPanel(String backURL) {
 
-		ImageIcon iconBack = new ImageIcon(backURL);
+		ImageIcon iconBack = createImageIcon(backURL);
 		JLabel labelBack = new JLabel(iconBack);
 
 		backPanel = new JPanel();
@@ -3200,6 +3114,8 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 		System.out.println("prologue() します");/////////////////////////
 		System.out.println("");//////////////////////////////////////////
 
+//		JOptionPane.showMessageDialog(null, "prologue() します");
+
 		buttonName = null;
 
 		partyStBlank();
@@ -3285,10 +3201,6 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 	}
 
-	private JPanel infoTable(Object setTableModel) {
-		return infoTable(setTableModel,"");
-	}
-
 	private void info(Object top, Object middle, Object bottom) {
 
 		if (top.equals("")) top = null;
@@ -3305,7 +3217,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 	private JPanel ent() {
 
-		int bI = 1;// //////////////////////////////////ボタンの数
+		int bI = 1;/////////////////////////////////////ボタンの数
 
 		JPanel panel = new JPanel();
 		format(panel);
@@ -3437,7 +3349,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 	private JPanel setEventImage(String imageFileName) {
 
-		ImageIcon eventIcon = new ImageIcon(imageFileName);
+		ImageIcon eventIcon = createImageIcon(imageFileName);
 		JLabel label = new JLabel(eventIcon);
 
 		eventPanel = new JPanel();
@@ -3481,7 +3393,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 		st.setRowHeight(fontSize*2);
 		st.setShowVerticalLines(false);// 縦枠
 		st.setShowHorizontalLines(false);// 横枠
-		st.setPreferredSize(new Dimension(w*70, h*20));
+		st.setPreferredSize(new Dimension(w*70, h*15));
 		format(st.getTableHeader());
 		st.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 
@@ -3649,7 +3561,6 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 	}
 
 	private void sound(float frequency, int soundLength) {
-		// TODO 自動生成されたメソッド・スタブ
 		try {
 			new Sound(frequency, soundLength);
 		} catch (LineUnavailableException e) {
@@ -3779,9 +3690,8 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 	private void mapChangeSound() {
 
-		sound(100f,200);
-		sound(100f,200);
-		sound(100f,200);
+		sound(100f,150);
+		sound(100f,150);
 	}
 
 	private boolean isDanger() {
@@ -3848,7 +3758,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 	}
 
-	private void clickButton(String s) {// /////////////
+	private void clickButton(String s) {////////////////
 	// for (int i = 0; i < 5; i++) {
 	// if (s.equals(Money.menu[i]))
 	// button[1].doClick(100);

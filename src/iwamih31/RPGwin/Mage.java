@@ -31,10 +31,10 @@ public class Mage extends Member {
 		int r = ((getLev() * getAp()) + (getWp() * 3));
 		return r;
 	}
-	
+
 	@Override
-	public int attack(int ud) {
-		int r = ((getLev() * getAp()) + ((getWp() + ud) * 3));
+public int attack(int ud) {
+		int r = ((getLev() * getAp()) + (ud * 3));
 		return r;
 	}
 
