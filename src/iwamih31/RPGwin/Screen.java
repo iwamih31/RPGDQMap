@@ -178,7 +178,7 @@ public class Screen extends JFrame implements ActionListener, KeyListener {
 
 		music = null;
 
-		repeatMusic("opening");
+		repeatMusic("オープニング");
 
 		outer();
 	}
